@@ -6,7 +6,7 @@ import java.util.Collections;
 
 public class eightPuzzle {
 
-    //Does the BFS
+    //This function does the BFS traversal
     public static void uniformCostSearch(ArrayList<Integer> intial, ArrayList<Integer> solution, int n){
         int depth = 0;
         int LIMIT = 31;//diameter I think is 31
@@ -74,12 +74,18 @@ public class eightPuzzle {
     //We have also saved time and memory by cutting down on expanded states
     //and not repeating the parent state
     public static void expandNode(Node node, int n){
+
+        //This save each swap state
         ArrayList<Integer> left = expandLeft(node.state,n);
         ArrayList<Integer> right = expandRight(node.state,n);
         ArrayList<Integer> top = expandTop(node.state,n);
         ArrayList<Integer> bottom = expandBottom(node.state,n);
+        //but not all may be valid swaps in the puzzle so
+        //we'll do a check and add valid swaps to the list of child nodes
 
+        //list of expansions
         node.children = new ArrayList<>();
+        //swapped left number and add to list if valid
         if(left != null){
             if(node.parent == null) {
                 node.children.add(new Node(node, left));
@@ -90,6 +96,7 @@ public class eightPuzzle {
                 }
             }
         }
+        //swapped right number and add to list if valid
         if(right != null){
             if(node.parent == null) {
                 node.children.add(new Node(node, right));
@@ -100,6 +107,7 @@ public class eightPuzzle {
                 }
             }
         }
+        //swapped top number and add to list if valid
         if(top != null){
             if(node.parent == null) {
                 node.children.add(new Node(node, top));
@@ -110,6 +118,7 @@ public class eightPuzzle {
                 }
             }
         }
+        //swapped bottom number and add to list if valid
         if(bottom != null){
             if(node.parent == null) {
                 node.children.add(new Node(node, bottom));
@@ -219,9 +228,11 @@ public class eightPuzzle {
         //1,2,3
         //4,5,6
         //7,8,0
+        //This is the solution state
         ArrayList<Integer> sol = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,0));
 
 
+        //pass the inital and solution state through
         uniformCostSearch(dep24, sol, N);
 
         return;
