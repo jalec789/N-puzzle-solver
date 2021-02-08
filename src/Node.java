@@ -33,6 +33,10 @@ public class Node implements Comparable<Node>{
         return weight;
     }
 
+    public int getDepth(){
+        return depth;
+    }
+
     //Override for A* priority queue to order based on weight
     @Override
     public int compareTo(Node node){
