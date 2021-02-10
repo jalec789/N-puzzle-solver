@@ -8,7 +8,7 @@ import java.lang.Math;
 
 public class eightPuzzle {
 
-    //I think this is 31 for an 8 puzzle, change this if n changes
+    //I think this is 31 for an 8 puzzle, change DIAMETER if N changes
     final static int DIAMETER = 31;
     //N is the dimensions of the nxn matrix
     final static int N = 3;
@@ -71,7 +71,10 @@ public class eightPuzzle {
         int total = n*n;
         for(int i = 0; i < total; i++){
             //System.out.println(state.get(i) + " " + solution.get(i));
-            if(state.get(i) != solution.get(i)){
+            if(state.get(i) == 0) {
+                //do nothing, we want to skip the blank tile
+            }
+            else if(state.get(i) != solution.get(i)){
                 j = solution.indexOf(state.get(i));
                 rowMoves = Math.abs((i % n) - (j % n));
                 colMoves = Math.abs((i / n) - (j / n));
@@ -107,44 +110,44 @@ public class eightPuzzle {
         //swapped left number and add to list if valid
         if(left != null){
             if(node.parent == null) {
-                node.children.add(new Node(node, left, manhattanDistanceCount(left,solution,n)));
+                node.children.add(new Node(node, left, manhattanDistanceCount(left,solution,n) + 1));
             }
             else{
                 if(!node.parent.state.equals(left)){//check for repeated states
-                    node.children.add(new Node(node, left, manhattanDistanceCount(left,solution,n)));
+                    node.children.add(new Node(node, left, manhattanDistanceCount(left,solution,n) + (node.depth + 1)));
                 }
             }
         }
         //swapped right number and add to list if valid
         if(right != null){
             if(node.parent == null) {
-                node.children.add(new Node(node, right, manhattanDistanceCount(right,solution,n)));
+                node.children.add(new Node(node, right, manhattanDistanceCount(right,solution,n) + 1));
             }
             else{
                 if(!node.parent.state.equals(right)){//check for repeated states
-                    node.children.add(new Node(node, right, manhattanDistanceCount(right,solution,n)));
+                    node.children.add(new Node(node, right, manhattanDistanceCount(right,solution,n) + (node.depth + 1)));
                 }
             }
         }
         //swapped top number and add to list if valid
         if(top != null){
             if(node.parent == null) {
-                node.children.add(new Node(node, top, manhattanDistanceCount(top,solution,n)));
+                node.children.add(new Node(node, top, manhattanDistanceCount(top,solution,n) + 1));
             }
             else{
                 if(!node.parent.state.equals(top)){//check for repeated states
-                    node.children.add(new Node(node, top, manhattanDistanceCount(top,solution,n)));
+                    node.children.add(new Node(node, top, manhattanDistanceCount(top,solution,n) + (node.depth + 1)));
                 }
             }
         }
         //swapped bottom number and add to list if valid
         if(bottom != null){
             if(node.parent == null) {
-                node.children.add(new Node(node, bottom, manhattanDistanceCount(bottom,solution,n)));
+                node.children.add(new Node(node, bottom, manhattanDistanceCount(bottom,solution,n) + 1));
             }
             else{
                 if(!node.parent.state.equals(bottom)){//check for repeated states
-                    node.children.add(new Node(node, bottom, manhattanDistanceCount(bottom,solution,n)));
+                    node.children.add(new Node(node, bottom, manhattanDistanceCount(bottom,solution,n) + (node.depth + 1)));
                 }
             }
         }
@@ -548,17 +551,17 @@ public class eightPuzzle {
             System.out.println("FAILED. No solution found");
         }
         else{
-            while (traverse != null){
-                printState(traverse.state,n);
-                System.out.println();
-                if(traverse.parent == null){
-                   break;
-                }else{
-                    traverse = traverse.parent;
-                }
-            }
-            System.out.println();
-            printState(traverse.state,n);
+//            while (traverse != null){
+//                printState(traverse.state,n);
+//                System.out.println();
+//                if(traverse.parent == null){
+//                   break;
+//                }else{
+//                    traverse = traverse.parent;
+//                }
+//            }
+//            System.out.println();
+//            printState(traverse.state,n);
 
             System.out.println("Solved at depth: " + leaf.getDepth());
         }
@@ -614,9 +617,8 @@ public class eightPuzzle {
         solved = uniformCostSearch(test,sol,N);
         end = System.nanoTime();    //END TIMING FUNCTION
         time = ((end - start) / 1e9);
-        System.out.println("Time: " + time + " seconds");
-
-        //printTrace(solved,N);
+        System.out.println("UCS: Time: " + time + " seconds");
+        printTrace(solved,N);
 
 
         start = System.nanoTime();  //START TIMING FUNCTION
@@ -624,8 +626,8 @@ public class eightPuzzle {
         solved = aStarMisplacedTileSearch(test,sol,N);
         end = System.nanoTime();    //END TIMING FUNCTION
         time = ((end - start) / 1e9);
-        System.out.println("Time: " + time + " seconds");
-        //printTrace(solved, N);
+        System.out.println("MISPLACED: Time: " + time + " seconds");
+        printTrace(solved, N);
 
 
         start = System.nanoTime();  //START TIMING FUNCTION
@@ -633,12 +635,12 @@ public class eightPuzzle {
         solved = aStarManhattanSearch(test,sol,N);
         end = System.nanoTime();    //END TIMING FUNCTION
         time = ((end - start) / 1e9);
-        System.out.println("Time: " + time + " seconds");
+        System.out.println("MANHATTAN: Time: " + time + " seconds");
         printTrace(solved, N);
 
 
 
-        
+
         //Questions:
 
         //How do you expect to input items, Should we be performing checks if it is correct input???
