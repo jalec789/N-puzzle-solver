@@ -45,7 +45,7 @@ public class eightPuzzle {
             pq.remove();//pop traverse, marks as visited
             if(traverse.state.equals(solution)){
                 //SOLUTION FOUND so return solved Node
-                System.out.println("Solved, created " + count + " nodes total.");
+                System.out.println("Manhattan Search solved, created " + count + " nodes total.");
                 return traverse;
             }
             if(traverse.depth < LIMIT){
@@ -196,7 +196,7 @@ public class eightPuzzle {
             pq.remove();//pop traverse, marks as visited
             if(traverse.state.equals(solution)){
                 //SOLUTION FOUND so return solved Node
-                System.out.println("Solved, created " + count + " nodes total.");
+                System.out.println("Misplaced Tiles Search solved, created " + count + " nodes total.");
                 return traverse;
             }
             if(traverse.depth < LIMIT){
@@ -371,24 +371,8 @@ public class eightPuzzle {
                 return null;
             }
         }
-        System.out.println("Solved, created " + count + " nodes total.");
+        System.out.println("Uniform Cost Search solved, created " + count + " nodes total.");
         return traverse;
-
-//        //output solution (probably should be in a separate function...)
-//        if(depth>LIMIT){
-//            System.out.println("FAILED");
-//        }
-//        else{
-//            while (traverse.parent != null){
-//                System.out.println();
-//                printState(traverse.state,n);
-//                traverse = traverse.parent;
-//            }
-//            System.out.println();
-//            printState(traverse.state,n);
-//
-//            System.out.println("Solved at depth: " + depth + ".\nCreated " + count + " nodes total.");
-//        }
     }
 
     //expandNode()
@@ -617,8 +601,9 @@ public class eightPuzzle {
         solved = uniformCostSearch(test,sol,N);
         end = System.nanoTime();    //END TIMING FUNCTION
         time = ((end - start) / 1e9);
-        System.out.println("UCS: Time: " + time + " seconds");
+        System.out.println("Time: " + time + " seconds");
         printTrace(solved,N);
+        System.out.println();
 
 
         start = System.nanoTime();  //START TIMING FUNCTION
@@ -626,8 +611,9 @@ public class eightPuzzle {
         solved = aStarMisplacedTileSearch(test,sol,N);
         end = System.nanoTime();    //END TIMING FUNCTION
         time = ((end - start) / 1e9);
-        System.out.println("MISPLACED: Time: " + time + " seconds");
+        System.out.println("Time: " + time + " seconds");
         printTrace(solved, N);
+        System.out.println();
 
 
         start = System.nanoTime();  //START TIMING FUNCTION
@@ -635,7 +621,7 @@ public class eightPuzzle {
         solved = aStarManhattanSearch(test,sol,N);
         end = System.nanoTime();    //END TIMING FUNCTION
         time = ((end - start) / 1e9);
-        System.out.println("MANHATTAN: Time: " + time + " seconds");
+        System.out.println("Time: " + time + " seconds");
         printTrace(solved, N);
 
 
