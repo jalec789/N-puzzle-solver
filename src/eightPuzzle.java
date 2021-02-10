@@ -252,44 +252,45 @@ public class eightPuzzle {
         //swapped left number and add to list if valid
         if(left != null){
             if(node.parent == null) {
-                node.children.add(new Node(node, left, misplacedTileCount(left,solution,n)));
+                //weight f(n) = g(n) + h(n) = number of misplaced tiles + depth aka number of moves
+                node.children.add(new Node(node, left, misplacedTileCount(left,solution,n) + 1));
             }
             else{
                 if(!node.parent.state.equals(left)){//check for repeated states
-                    node.children.add(new Node(node, left, misplacedTileCount(left,solution,n)));
+                    node.children.add(new Node(node, left, misplacedTileCount(left,solution,n) + (node.depth + 1)));
                 }
             }
         }
         //swapped right number and add to list if valid
         if(right != null){
             if(node.parent == null) {
-                node.children.add(new Node(node, right, misplacedTileCount(right,solution,n)));
+                node.children.add(new Node(node, right, misplacedTileCount(right,solution,n) + 1));
             }
             else{
                 if(!node.parent.state.equals(right)){//check for repeated states
-                    node.children.add(new Node(node, right, misplacedTileCount(right,solution,n)));
+                    node.children.add(new Node(node, right, misplacedTileCount(right,solution,n) + (node.depth + 1)));
                 }
             }
         }
         //swapped top number and add to list if valid
         if(top != null){
             if(node.parent == null) {
-                node.children.add(new Node(node, top, misplacedTileCount(top,solution,n)));
+                node.children.add(new Node(node, top, misplacedTileCount(top,solution,n) + 1));
             }
             else{
                 if(!node.parent.state.equals(top)){//check for repeated states
-                    node.children.add(new Node(node, top, misplacedTileCount(top,solution,n)));
+                    node.children.add(new Node(node, top, misplacedTileCount(top,solution,n) + (node.depth + 1)));
                 }
             }
         }
         //swapped bottom number and add to list if valid
         if(bottom != null){
             if(node.parent == null) {
-                node.children.add(new Node(node, bottom, misplacedTileCount(bottom,solution,n)));
+                node.children.add(new Node(node, bottom, misplacedTileCount(bottom,solution,n) + 1));
             }
             else{
                 if(!node.parent.state.equals(bottom)){//check for repeated states
-                    node.children.add(new Node(node, bottom, misplacedTileCount(bottom,solution,n)));
+                    node.children.add(new Node(node, bottom, misplacedTileCount(bottom,solution,n) + (node.depth + 1)));
                 }
             }
         }
@@ -550,7 +551,11 @@ public class eightPuzzle {
             while (traverse != null){
                 printState(traverse.state,n);
                 System.out.println();
-                traverse = traverse.parent;
+                if(traverse.parent == null){
+                   break;
+                }else{
+                    traverse = traverse.parent;
+                }
             }
             System.out.println();
             printState(traverse.state,n);
@@ -589,7 +594,7 @@ public class eightPuzzle {
         //Here's an unsolvable solution, Used for testing only
         //ArrayList<Integer> unsolvable = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,8,7,0));
 
-//        ArrayList<Integer> cust = new ArrayList<>(Arrays.asList(0,8,3,4,5,6,7,1,2));
+        ArrayList<Integer> cust = new ArrayList<>(Arrays.asList(1,2,5,3,6,8,7,0,4));
 //        printState(cust,N);
 //        printState(sol, N);
 //        aStarManhattanSearch(dep8, sol, N);
@@ -601,9 +606,12 @@ public class eightPuzzle {
         long end;
         double time;
 
+
+        ArrayList<Integer> test = dep24;
+
         start = System.nanoTime();  //START TIMING FUNCTION
         //pass the initial and solution state through
-        solved = uniformCostSearch(dep16,sol,N);
+        solved = uniformCostSearch(test,sol,N);
         end = System.nanoTime();    //END TIMING FUNCTION
         time = ((end - start) / 1e9);
         System.out.println("Time: " + time + " seconds");
@@ -613,23 +621,28 @@ public class eightPuzzle {
 
         start = System.nanoTime();  //START TIMING FUNCTION
         //pass the initial and solution state through
-        aStarMisplacedTileSearch(dep16,sol,N);
+        solved = aStarMisplacedTileSearch(test,sol,N);
         end = System.nanoTime();    //END TIMING FUNCTION
         time = ((end - start) / 1e9);
         System.out.println("Time: " + time + " seconds");
+        //printTrace(solved, N);
 
 
         start = System.nanoTime();  //START TIMING FUNCTION
         //pass the initial and solution state through
-        aStarManhattanSearch(dep16,sol,N);
+        solved = aStarManhattanSearch(test,sol,N);
         end = System.nanoTime();    //END TIMING FUNCTION
         time = ((end - start) / 1e9);
         System.out.println("Time: " + time + " seconds");
+        printTrace(solved, N);
 
+
+
+        
         //Questions:
 
         //How do you expect to input items, Should we be performing checks if it is correct input???
-        //      similar to deniz.com/8-puzzle-solver/  ???
+        //      similar to deniz.co/8-puzzle-solver/  ???
 
 
         //What do you think of the naming in this code so far, I know it said book similar but I have this rn???
