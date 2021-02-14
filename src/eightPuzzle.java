@@ -1,8 +1,5 @@
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.PriorityQueue;
+import java.util.*;
 import java.lang.Math;
 
 
@@ -535,15 +532,15 @@ public class eightPuzzle {
             System.out.println("FAILED. No solution found");
         }
         else{
-//            while (traverse != null){
-//                printState(traverse.state,n);
-//                System.out.println();
-//                if(traverse.parent == null){
-//                   break;
-//                }else{
-//                    traverse = traverse.parent;
-//                }
-//            }
+            while (traverse != null){
+                printState(traverse.state,n);
+                System.out.println();
+                if(traverse.parent == null){
+                   break;
+                }else{
+                    traverse = traverse.parent;
+                }
+            }
 //            System.out.println();
 //            printState(traverse.state,n);
 
@@ -551,6 +548,66 @@ public class eightPuzzle {
         }
     }
 
+    //This function gets user input for nxn puzzle
+    public static ArrayList<Integer> getPuzzle(int n){
+        int x;
+        Scanner input = new Scanner(System.in);
+
+        ArrayList<Integer> test = new ArrayList<>();
+
+        for(int i = 0; i < n; i++){
+            System.out.print("Enter row " + (i+1) + " (use spaces to represent the blank): ");
+            for(int j = 0; j < n; j++){
+                x = Integer.parseInt(input.next());
+                test.add(x);
+            }
+        }
+
+        if(checkPuzzle(test,n)){
+            System.out.println("Custom Puzzle is:");
+            printState(test, n);
+            System.out.println("Puzzle VALID (this doesn't mean solvable) saved to custom");
+        }
+        else{
+            System.out.println("Custom Puzzle is:");
+            printState(test, n);
+            System.out.println("Puzzle is INVALID will not be saved. Restoring the Default puzzle:");
+            ArrayList<Integer> sol = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,0));
+            printState(sol, n);
+            return sol;
+        }
+        return test;
+    }
+
+    //This checks that there are no stray numbers
+    //This does NOT verify if a puzzle is solvable!!!!
+    public static boolean checkPuzzle(ArrayList<Integer> ar, int n){
+        int size = n * n - 1;
+//        ArrayList<Integer> sol = new ArrayList<>();
+//        for(int i = 0; i < size; i++){
+//            sol.add(i);//populate solution array
+//        }
+        Set<Integer> set = new HashSet<Integer>();
+        for(int i = 0; i < size; i++){
+            if(ar.indexOf(i) == -1){
+                return false;
+            }
+            else{
+                if(!set.add(i)){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+
+    public static void promptEnter(){
+        System.out.println("(Press ENTER to continue)");
+        Scanner input = new Scanner(System.in);
+        input.nextLine();
+    }
 
 
     public static void main(String[] args){
@@ -566,9 +623,13 @@ public class eightPuzzle {
         ArrayList<Integer> dep20 = new ArrayList<>(Arrays.asList(7,1,2,4,8,5,6,3,0));
         ArrayList<Integer> dep24 = new ArrayList<>(Arrays.asList(0,7,2,4,6,1,3,5,8));
 
+        // COPY AND PASTE dep24 for input:        0 7 2 4 6 1 3 5 8
+
         //List all possible solutions
         ArrayList<ArrayList<Integer>> possibleSolutions = new ArrayList<>(
                 Arrays.asList(dep0, dep1, dep2, dep4, dep8, dep12, dep16, dep20, dep24));
+        ArrayList<String> possibleSolutionsNames = new ArrayList<>(
+                Arrays.asList("0", "1", "2", "4", "8", "12", "16", "20", "24"));
 
         //Solution State
         //for an 8 puzzle: (1,2,3,4,5,6,7,8,0)
@@ -581,51 +642,171 @@ public class eightPuzzle {
         //Here's an unsolvable solution, Used for testing only
         //ArrayList<Integer> unsolvable = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,8,7,0));
 
-        ArrayList<Integer> cust = new ArrayList<>(Arrays.asList(1,2,5,3,6,8,7,0,4));
+//        ArrayList<Integer> cust = new ArrayList<>(Arrays.asList(1,2,5,3,6,8,7,0,4));
 //        printState(cust,N);
 //        printState(sol, N);
 //        aStarManhattanSearch(dep8, sol, N);
 
+        String home =   "\nWELCOME TO JASON CHAN'S 8 PUZZLE SOLVER\n" +
+                        "The default puzzle is a 3x3 depth 0 solved puzzle\n" +
+                        "Type [1] to enter your puzzle\n" +
+                        "Type [2] to view the puzzle to be tested\n" +
+                        "Type [3] to view the puzzle's solution state\n\n" +
+                        "Choice of algorithms to run on the puzzle:\n" +
+                        "Type [4] to run Uniform Cost Search on the puzzle PRINTS TRACE\n" +
+                        "Type [5] to run A* with Misplaced Tile Heuristic PRINTS TRACE\n" +
+                        "Type [6] to run A* with the Manhattan Distance Heuristic PRINTS TRACE\n\n" +
+                        "Type [7] to run Benchmark comparison between all algorithms on the custom puzzle (short run time)\n\n" +
+                        "Type [8] to run Benchmark comparison on each algorithms on puzzles with some depths 0 to 24 (long run time)\n" +
+                        "Type [0] to exit the program.\n" +
+                        "Enter option: ";
+
+
+
+        ArrayList<Integer> custom = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,0));
         Node solved;
-
-
         long start;
         long end;
         double time;
 
-
-        ArrayList<Integer> test = dep24;
-
-        start = System.nanoTime();  //START TIMING FUNCTION
-        //pass the initial and solution state through
-        solved = uniformCostSearch(test,sol,N);
-        end = System.nanoTime();    //END TIMING FUNCTION
-        time = ((end - start) / 1e9);
-        System.out.println("Time: " + time + " seconds");
-        printTrace(solved,N);
-        System.out.println();
+        String option = "9";
 
 
-        start = System.nanoTime();  //START TIMING FUNCTION
-        //pass the initial and solution state through
-        solved = aStarMisplacedTileSearch(test,sol,N);
-        end = System.nanoTime();    //END TIMING FUNCTION
-        time = ((end - start) / 1e9);
-        System.out.println("Time: " + time + " seconds");
-        printTrace(solved, N);
-        System.out.println();
+        while(!option.equals("0")){
+            System.out.print(home);
+            Scanner input = new Scanner(System.in);
+            option = input.nextLine();
 
+            switch (option.charAt(0)){
+                case '0': return;//exit the program
 
-        start = System.nanoTime();  //START TIMING FUNCTION
-        //pass the initial and solution state through
-        solved = aStarManhattanSearch(test,sol,N);
-        end = System.nanoTime();    //END TIMING FUNCTION
-        time = ((end - start) / 1e9);
-        System.out.println("Time: " + time + " seconds");
-        printTrace(solved, N);
+                case '1':
+                    System.out.println("\n=========================================================");
+                    custom = getPuzzle(N);
+                    System.out.println("\n=========================================================");
+                    break;
 
+                case '2':
+                    System.out.println("\n=========================================================");
+                    System.out.println("CUSTOM STATE:");
+                    printState(custom, N);
+                    System.out.println("\n=========================================================");
+                    break;
 
+                case '3':
+                    System.out.println("\n=========================================================");
+                    System.out.println("SOLUTION STATE:");
+                    printState(sol, N);
+                    System.out.println("\n=========================================================");
+                    break;
 
+                case '4':
+                    System.out.println("\n=========================================================");
+                    solved = uniformCostSearch(custom, sol, N);
+                    System.out.println("SOLUTION TRACE (bottom up): ");
+                    printTrace(solved,N);
+                    System.out.println("\n=========================================================");
+                    break;
+
+                case '5':
+                    System.out.println("\n=========================================================");
+                    solved = aStarMisplacedTileSearch(custom, sol, N);
+                    System.out.println("SOLUTION TRACE (bottom up): ");
+                    printTrace(solved,N);
+                    System.out.println("\n=========================================================");
+                    break;
+
+                case '6':
+                    System.out.println("\n=========================================================");
+                    solved = aStarManhattanSearch(custom, sol, N);
+                    System.out.println("SOLUTION TRACE (bottom up): ");
+                    printTrace(solved,N);
+                    System.out.println("\n=========================================================");
+                    break;
+
+                case '7':   //Benchmark each algorithm against a custom state
+                    //PLEASE BE CAREFUL AS WE ASSUME THESE are solvable
+
+                    System.out.println("\n=========================================================");
+                    System.out.println("TESTING DEPTH CUSTOM STATE ON ALL ALGORITHMS AND TIMING");
+                    printState(custom,N);
+
+                    start = System.nanoTime();  //START TIMING FUNCTION
+                    //pass the initial and solution state through
+                    solved = uniformCostSearch(custom,sol,N);
+                    end = System.nanoTime();    //END TIMING FUNCTION
+                    time = ((end - start) / 1e9);
+                    System.out.println("Time: " + time + " seconds at depth of " + solved.getDepth() + ".");
+//                    printTrace(solved,N);
+                    System.out.println();
+
+                    start = System.nanoTime();  //START TIMING FUNCTION
+                    //pass the initial and solution state through
+                    solved = aStarMisplacedTileSearch(custom,sol,N);
+                    end = System.nanoTime();    //END TIMING FUNCTION
+                    time = ((end - start) / 1e9);
+                    System.out.println("Time: " + time + " seconds at depth of " + solved.getDepth() + ".");
+//                    printTrace(solved, N);
+                    System.out.println();
+
+                    start = System.nanoTime();  //START TIMING FUNCTION
+                    //pass the initial and solution state through
+                    solved = aStarManhattanSearch(custom,sol,N);
+                    end = System.nanoTime();    //END TIMING FUNCTION
+                    time = ((end - start) / 1e9);
+                    System.out.println("Time: " + time + " seconds at depth of " + solved.getDepth() + ".");
+//                    printTrace(solved, N);
+
+                    System.out.println("\n=========================================================");
+
+                    break;
+
+                case '8':   //Benchmark each algorithm against a depth states
+                    //THIS MAY TAKE A WHILE
+                    //PLEASE BE CAREFUL AS WE ASSUME THESE are solvable
+
+                    System.out.println("\n=========================================================");
+                    for(int i = 0; i < possibleSolutions.size(); i++){
+
+                        System.out.println("\n---------------------------------------------------------");
+                        System.out.println("TESTING DEPTH " + possibleSolutionsNames.get(i) + " STATE");
+                        printState(possibleSolutions.get(i),N);
+
+                        start = System.nanoTime();  //START TIMING FUNCTION
+                        //pass the initial and solution state through
+                        solved = uniformCostSearch(possibleSolutions.get(i),sol,N);
+                        end = System.nanoTime();    //END TIMING FUNCTION
+                        time = ((end - start) / 1e9);
+                        System.out.println("Time: " + time + " seconds at depth of " + solved.getDepth() + ".");
+//                        printTrace(solved,N);
+                        System.out.println();
+
+                        start = System.nanoTime();  //START TIMING FUNCTION
+                        //pass the initial and solution state through
+                        solved = aStarMisplacedTileSearch(possibleSolutions.get(i),sol,N);
+                        end = System.nanoTime();    //END TIMING FUNCTION
+                        time = ((end - start) / 1e9);
+                        System.out.println("Time: " + time + " seconds at depth of " + solved.getDepth() + ".");
+//                        printTrace(solved, N);
+                        System.out.println();
+
+                        start = System.nanoTime();  //START TIMING FUNCTION
+                        //pass the initial and solution state through
+                        solved = aStarManhattanSearch(possibleSolutions.get(i),sol,N);
+                        end = System.nanoTime();    //END TIMING FUNCTION
+                        time = ((end - start) / 1e9);
+                        System.out.println("Time: " + time + " seconds at depth of " + solved.getDepth() + ".");
+//                        printTrace(solved, N);
+                    }
+                    System.out.println("\n=========================================================");
+                    System.out.println("DONE TESTING");
+                    break;
+
+                default:
+                    System.out.println("ERROR: NOT AN OPTION");
+            }
+            promptEnter();
+        }
 
         //Questions:
 
@@ -634,15 +815,7 @@ public class eightPuzzle {
 
 
         //What do you think of the naming in this code so far, I know it said book similar but I have this rn???
-
-
-
-
-
-
-
-
-
+        
         return;
     }
 }
