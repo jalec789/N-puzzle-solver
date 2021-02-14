@@ -224,7 +224,10 @@ public class eightPuzzle {
         int total = n*n;
         for(int i = 0; i < total; i++){
             //System.out.println(state.get(i) + " " + solution.get(i));
-            if(state.get(i) != solution.get(i)){
+            if(state.get(i) == 0) {
+                //do nothing, we want to skip the blank tile
+            }
+            else if(state.get(i) != solution.get(i)){
                 count++;
             }
         }
@@ -815,7 +818,7 @@ public class eightPuzzle {
 
 
         //What do you think of the naming in this code so far, I know it said book similar but I have this rn???
-        
+
         return;
     }
 }
