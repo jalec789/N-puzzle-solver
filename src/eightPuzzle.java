@@ -559,7 +559,7 @@ public class eightPuzzle {
         ArrayList<Integer> test = new ArrayList<>();
 
         for(int i = 0; i < n; i++){
-            System.out.print("Enter row " + (i+1) + " (use spaces to represent the blank): ");
+            System.out.print("Enter row " + (i+1) + " (separate with spaces and use 0 to represent the blank tile): ");
             for(int j = 0; j < n; j++){
                 x = Integer.parseInt(input.next());
                 test.add(x);
