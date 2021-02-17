@@ -31,26 +31,32 @@ public class eightPuzzle {
 
         PriorityQueue<Node> pq = new PriorityQueue<>();
 
-        long count = 0; //track nodes created
+//        long count = 0; //track nodes created
+        long max = 0;
 
         //initialize
         Node traverse = root;
-        count++;
+//        count++;
+        max++;
         pq.add(traverse);
 
         while(!pq.isEmpty()){
             pq.remove();//pop traverse, marks as visited
             if(traverse.state.equals(solution)){
                 //SOLUTION FOUND so return solved Node
-                System.out.println("Manhattan Search solved, created " + count + " nodes total.");
+//                System.out.println("Manhattan Search solved, created " + count + " nodes total.");
+                System.out.println("Manhattan Search solved, queue reached a maximum of " + max + " nodes ever held at once.");
                 return traverse;
+            }
+            if(pq.size() > max){
+                max = pq.size();
             }
             if(traverse.depth < LIMIT){
                 manhattanExpandNode(traverse,solution,n);
                 for(int i = 0; i < traverse.children.size(); i++){
                     pq.add(traverse.children.get(i));
                     traverse.children.get(i).depth = traverse.depth + 1;
-                    count++;
+//                    count++;
                 }
             }
             traverse = pq.peek();
@@ -107,44 +113,44 @@ public class eightPuzzle {
         //swapped left number and add to list if valid
         if(left != null){
             if(node.parent == null) {
-                node.children.add(new Node(node, left, manhattanDistanceCount(left,solution,n) + 1));
+                node.children.add(new Node(node, left, manhattanDistanceCount(left,solution,n)));
             }
             else{
                 if(!node.parent.state.equals(left)){//check for repeated states
-                    node.children.add(new Node(node, left, manhattanDistanceCount(left,solution,n) + (node.depth + 1)));
+                    node.children.add(new Node(node, left, manhattanDistanceCount(left,solution,n) + (node.depth )));
                 }
             }
         }
         //swapped right number and add to list if valid
         if(right != null){
             if(node.parent == null) {
-                node.children.add(new Node(node, right, manhattanDistanceCount(right,solution,n) + 1));
+                node.children.add(new Node(node, right, manhattanDistanceCount(right,solution,n) ));
             }
             else{
                 if(!node.parent.state.equals(right)){//check for repeated states
-                    node.children.add(new Node(node, right, manhattanDistanceCount(right,solution,n) + (node.depth + 1)));
+                    node.children.add(new Node(node, right, manhattanDistanceCount(right,solution,n) + (node.depth )));
                 }
             }
         }
         //swapped top number and add to list if valid
         if(top != null){
             if(node.parent == null) {
-                node.children.add(new Node(node, top, manhattanDistanceCount(top,solution,n) + 1));
+                node.children.add(new Node(node, top, manhattanDistanceCount(top,solution,n) ));
             }
             else{
                 if(!node.parent.state.equals(top)){//check for repeated states
-                    node.children.add(new Node(node, top, manhattanDistanceCount(top,solution,n) + (node.depth + 1)));
+                    node.children.add(new Node(node, top, manhattanDistanceCount(top,solution,n) + (node.depth )));
                 }
             }
         }
         //swapped bottom number and add to list if valid
         if(bottom != null){
             if(node.parent == null) {
-                node.children.add(new Node(node, bottom, manhattanDistanceCount(bottom,solution,n) + 1));
+                node.children.add(new Node(node, bottom, manhattanDistanceCount(bottom,solution,n) ));
             }
             else{
                 if(!node.parent.state.equals(bottom)){//check for repeated states
-                    node.children.add(new Node(node, bottom, manhattanDistanceCount(bottom,solution,n) + (node.depth + 1)));
+                    node.children.add(new Node(node, bottom, manhattanDistanceCount(bottom,solution,n) + (node.depth )));
                 }
             }
         }
@@ -172,7 +178,8 @@ public class eightPuzzle {
 
         PriorityQueue<Node> pq = new PriorityQueue<>();
 
-        long count = 0; //track nodes created
+//        long count = 0; //track nodes created
+        long max = 0;
 
         //Priority Queue Test Demo
 //        Node a = new Node(null, initState, 5);
@@ -186,15 +193,20 @@ public class eightPuzzle {
 //        }
 
         Node traverse = root;
-        count++;
+//        count++;
+        max++;
         pq.add(traverse);
 
         while(!pq.isEmpty()){
             pq.remove();//pop traverse, marks as visited
             if(traverse.state.equals(solution)){
                 //SOLUTION FOUND so return solved Node
-                System.out.println("Misplaced Tiles Search solved, created " + count + " nodes total.");
+//                System.out.println("Misplaced Tiles Search solved, created " + count + " nodes total.");
+                System.out.println("Misplaced Tiles Search solved, queue reached a maximum of " + max + " nodes ever held at once.");
                 return traverse;
+            }
+            if(pq.size() > max){
+                max = pq.size();
             }
             if(traverse.depth < LIMIT){
                 //Expand traverse (make children on traverse)
@@ -203,7 +215,7 @@ public class eightPuzzle {
                     pq.add(traverse.children.get(i));
                     traverse.children.get(i).depth = traverse.depth + 1;
 //                    System.out.println(traverse.children.get(i).getWeight());
-                    count++;
+//                    count++;
                 }
 //                System.out.println();
             }
@@ -321,18 +333,19 @@ public class eightPuzzle {
         ArrayList<Integer> initState = new ArrayList<>(intial);
         Node root = new Node(null, initState);
 
+        //count will keep track of node created. ONLY for this type of search.
+        //we start with 1 nodes for 1 parent and the children will be made
+//        long count = 1;
+        long max = 0;
+
         //For BFS traversal we'll have a parents list and a childs list
         //if no parent node has the solution state then we will pop the parents
         //and the childs will become new parents list
         //then those parents will expand a new childs list until a solution is found
         //in the parents list
         ArrayList<Node> parents = new ArrayList<Node>();
-
         parents.add(root);
-
-        //count will keep track of node created. ONLY for this type of search.
-        //we start with 1 nodes for 1 parent and the children will be made
-        long count = 1;
+        max++;
 
         //first iteration outside loop
         Node traverse = parents.get(0);
@@ -345,14 +358,19 @@ public class eightPuzzle {
             childs.add(traverse.children.get(j));
             traverse.children.get(j).depth = traverse.depth + 1;
             //each child made is a new node added, so count+1
-            count++;
+//            count++;
         }
 
         //Okay now this is the loop we will do BFS if the root node isn't already the solution
         while(!traverse.state.equals(solution)){
 //            depth++;//tracks the depth of the tree
-            parents = childs;
+            parents = childs;   //make childs the new parents list and create a new childs list
             childs = new ArrayList<>();
+
+//            System.out.println("PARENT SIZE: " + parents.size());
+            if(parents.size() > max){
+                max = parents.size();
+            }
             for(int i = 0; i < parents.size(); i++){    //for each parent check with solution or else expand
                 traverse = parents.get(i);
                 //System.out.println();//DEBUG
@@ -364,14 +382,15 @@ public class eightPuzzle {
                 for(int j = 0; j < traverse.children.size(); j++){  //add all the expansions to a childs list
                     childs.add(traverse.children.get(j));
                     traverse.children.get(j).depth = traverse.depth + 1;
-                    count++;
+//                    count++;
                 }
             }
             if(traverse.depth > LIMIT){
                 return null;
             }
         }
-        System.out.println("Uniform Cost Search solved, created " + count + " nodes total.");
+//        System.out.println("Uniform Cost Search solved, created " + count + " nodes total.");
+        System.out.println("Uniform Cost Search, queue reached a maximum of " + max + " nodes ever held at once.");
         return traverse;
     }
 
@@ -605,7 +624,7 @@ public class eightPuzzle {
         return true;
     }
 
-
+    //Press enter function
     public static void promptEnter(){
         System.out.println("(Press ENTER to continue)");
         Scanner input = new Scanner(System.in);
@@ -627,6 +646,7 @@ public class eightPuzzle {
         ArrayList<Integer> dep24 = new ArrayList<>(Arrays.asList(0,7,2,4,6,1,3,5,8));
 
         // COPY AND PASTE dep24 for input:        0 7 2 4 6 1 3 5 8
+        //1 2 5 3 6 8 7 0 4
 
         //List all possible solutions
         ArrayList<ArrayList<Integer>> possibleSolutions = new ArrayList<>(
